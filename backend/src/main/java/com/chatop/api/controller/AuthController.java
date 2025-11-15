@@ -13,6 +13,12 @@ import com.chatop.api.dto.LoginRequest;
 import com.chatop.api.dto.RegisterRequest;
 import com.chatop.api.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 /**
@@ -21,6 +27,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/auth")
 @Validated
+@Tag(name = "Authentication", description = "Endpoints d'authentification (login, register)")
 public class AuthController {
 
     private final AuthService authService;
@@ -33,6 +40,12 @@ public class AuthController {
      * POST /api/auth/login
      * Authenticate user and return JWT token
      */
+    @Operation(summary = "Connexion utilisateur", description = "Authentifie un utilisateur et retourne un token JWT")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Connexion réussie",
+            content = @Content(schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Email ou mot de passe incorrect")
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         try {
@@ -47,6 +60,12 @@ public class AuthController {
      * POST /api/auth/register
      * Register a new user and return JWT token
      */
+    @Operation(summary = "Inscription utilisateur", description = "Crée un nouvel utilisateur et retourne un token JWT")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Inscription réussie",
+            content = @Content(schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Email déjà utilisé ou données invalides")
+    })
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         try {
