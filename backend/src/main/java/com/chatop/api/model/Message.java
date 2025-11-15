@@ -1,19 +1,46 @@
 package com.chatop.api.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Entity representing a Message
- * 
+ *
  * Table: MESSAGES
  * Fields: id, rental_id, user_id, message, created_at, updated_at
  */
 @Entity
 @Table(name = "MESSAGES")
+@Getter
+@Setter
 public class Message {
-    
-    // TODO: Add your fields and annotations here
-    // Hint: Use @Id, @GeneratedValue, @Column, @ManyToOne, @JoinColumn
-    
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
+
+  @ManyToOne
+  @JoinColumn(name = "rental_id")
+  private Rental rental;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+
+  @Column(length = 2000)
+  private String message;
+
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
+
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }
