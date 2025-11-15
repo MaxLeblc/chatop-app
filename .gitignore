@@ -45,6 +45,7 @@ backend/mvnw.cmd
 
 # Miscellaneous
 /.angular/cache
+frontend/.angular/
 .sass-cache/
 /connect.lock
 /coverage
