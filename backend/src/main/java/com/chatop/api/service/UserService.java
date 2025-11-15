@@ -21,7 +21,7 @@ public class UserService {
     /**
      * Get user by ID
      */
-    public UserDto getUserById(Long id) {
+    public UserDto getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 

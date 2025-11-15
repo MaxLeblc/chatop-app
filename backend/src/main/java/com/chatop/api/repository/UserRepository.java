@@ -12,7 +12,7 @@ import com.chatop.api.model.User;
  * Provides CRUD operations and custom queries
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
   /**
    * Find a user by email
