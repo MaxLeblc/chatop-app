@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @RestController
 @RequestMapping("/api/user")
-@Tag(name = "Users", description = "Gestion des utilisateurs")
+@Tag(name = "Users", description = "User management")
 @SecurityRequirement(name = "Bearer Authentication")
 public class UserController {
 
@@ -37,39 +37,17 @@ public class UserController {
      * GET /api/user/{id}
      * Get user details by ID
      */
-    @Operation(summary = "Récupérer un utilisateur par ID", description = "Retourne les informations d'un utilisateur (authentification requise)")
+    @Operation(summary = "Get user by ID", description = "Return user information (authentication required)")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Utilisateur trouvé",
+        @ApiResponse(responseCode = "200", description = "User found",
             content = @Content(schema = @Schema(implementation = UserDto.class))),
-        @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé"),
-        @ApiResponse(responseCode = "403", description = "Token JWT invalide ou absent")
+        @ApiResponse(responseCode = "404", description = "User not found"),
+        @ApiResponse(responseCode = "403", description = "Invalid or missing JWT token")
     })
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
         try {
             UserDto user = userService.getUserById(id);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    /**
-     * GET /api/user/me
-     * Get current authenticated user details
-     */
-    @Operation(summary = "Récupérer l'utilisateur connecté", description = "Retourne les informations de l'utilisateur actuellement authentifié")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Utilisateur trouvé",
-            content = @Content(schema = @Schema(implementation = UserDto.class))),
-        @ApiResponse(responseCode = "404", description = "Utilisateur non trouvé"),
-        @ApiResponse(responseCode = "403", description = "Token JWT invalide ou absent")
-    })
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
-        try {
-            String email = authentication.getName();
-            UserDto user = userService.getUserByEmail(email);
             return ResponseEntity.ok(user);
         } catch (RuntimeException ex) {
             return ResponseEntity.notFound().build();
