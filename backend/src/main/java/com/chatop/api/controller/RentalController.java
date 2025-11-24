@@ -61,15 +61,9 @@ public class RentalController {
   public ResponseEntity<RentalDto> createRental(
       @ModelAttribute @Valid RentalCreateRequest request,
       Authentication authentication) {
-    try {
-      String ownerEmail = authentication.getName();
-
-      RentalDto rental = rentalService.createRental(request, ownerEmail);
-
-      return ResponseEntity.status(HttpStatus.CREATED).body(rental);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    String ownerEmail = authentication.getName();
+    RentalDto rental = rentalService.createRental(request, ownerEmail);
+    return ResponseEntity.status(HttpStatus.CREATED).body(rental);
   }
 
   /**
@@ -83,13 +77,9 @@ public class RentalController {
   })
   @GetMapping
   public ResponseEntity<RentalsResponse> getAllRentals() {
-    try {
-      List<RentalDto> rentals = rentalService.getAllRentals();
-      RentalsResponse response = new RentalsResponse(rentals);
-      return ResponseEntity.ok(response);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    List<RentalDto> rentals = rentalService.getAllRentals();
+    RentalsResponse response = new RentalsResponse(rentals);
+    return ResponseEntity.ok(response);
   }
 
   /**
@@ -104,12 +94,8 @@ public class RentalController {
   })
   @GetMapping("/{id}")
   public ResponseEntity<RentalDto> getRentalById(@PathVariable Integer id) {
-    try {
-      RentalDto rental = rentalService.getRentalById(id);
-      return ResponseEntity.ok(rental);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    RentalDto rental = rentalService.getRentalById(id);
+    return ResponseEntity.ok(rental);
   }
 
   /**
@@ -124,35 +110,9 @@ public class RentalController {
       @ApiResponse(responseCode = "403", description = "Invalid or missing JWT token")
   })
   @PutMapping(value = "/{id}", consumes = "multipart/form-data")
-
   public ResponseEntity<RentalDto> updateRental(@PathVariable Integer id,
       @ModelAttribute @Valid RentalUpdateRequest request) {
-    try {
-      RentalDto rental = rentalService.updateRental(id, request);
-      return ResponseEntity.ok(rental);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-  }
-
-  /**
-   * DELETE /api/rentals/{id}
-   * Delete rental by ID
-   */
-  @Operation(summary = "Delete rental", description = "Delete an existing rental by its ID")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Rental deleted successfully"),
-      @ApiResponse(responseCode = "404", description = "Rental not found"),
-      @ApiResponse(responseCode = "403", description = "Invalid or missing JWT token")
-  })
-  @DeleteMapping("/{id}")
-
-  public ResponseEntity<Void> deleteRental(@PathVariable Integer id) {
-    try {
-      rentalService.deleteRental(id);
-      return ResponseEntity.noContent().build();
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    RentalDto rental = rentalService.updateRental(id, request);
+    return ResponseEntity.ok(rental);
   }
 }

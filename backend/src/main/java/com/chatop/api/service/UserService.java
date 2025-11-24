@@ -3,6 +3,7 @@ package com.chatop.api.service;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.UserDto;
+import com.chatop.api.exception.ResourceNotFoundException;
 import com.chatop.api.model.User;
 import com.chatop.api.repository.UserRepository;
 
@@ -23,7 +24,7 @@ public class UserService {
      */
     public UserDto getUserById(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         return mapToDto(user);
     }
@@ -33,7 +34,7 @@ public class UserService {
      */
     public UserDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
         return mapToDto(user);
     }

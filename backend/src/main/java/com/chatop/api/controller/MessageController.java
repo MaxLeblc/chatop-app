@@ -52,12 +52,8 @@ public class MessageController {
   public ResponseEntity<MessageResponse> createMessage(
       @Valid @RequestBody MessageRequest request,
       Authentication authentication) {
-    try {
-      String userEmail = authentication.getName();
-      MessageResponse response = messageService.createMessage(request, userEmail);
-      return ResponseEntity.ok(response);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
+    String userEmail = authentication.getName();
+    MessageResponse response = messageService.createMessage(request, userEmail);
+    return ResponseEntity.ok(response);
   }
 }

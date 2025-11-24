@@ -54,12 +54,8 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        try {
-            AuthResponse response = authService.login(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -74,12 +70,8 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            AuthResponse response = authService.register(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        AuthResponse response = authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
@@ -95,12 +87,8 @@ public class AuthController {
     })
     @GetMapping("/me")
     public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
-        try {
-            String email = authentication.getName();
-            UserDto user = userService.getUserByEmail(email);
-            return ResponseEntity.ok(user);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        String email = authentication.getName();
+        UserDto user = userService.getUserByEmail(email);
+        return ResponseEntity.ok(user);
     }
 }

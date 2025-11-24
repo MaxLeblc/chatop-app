@@ -1,12 +1,13 @@
 package com.chatop.api.service;
 
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.AuthResponse;
 import com.chatop.api.dto.LoginRequest;
 import com.chatop.api.dto.RegisterRequest;
+import com.chatop.api.exception.EmailAlreadyExistsException;
+import com.chatop.api.exception.InvalidCredentialsException;
 import com.chatop.api.model.User;
 import com.chatop.api.repository.UserRepository;
 import com.chatop.api.security.JwtTokenProvider;
@@ -32,10 +33,10 @@ public class AuthService {
      */
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
@@ -47,7 +48,7 @@ public class AuthService {
      */
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists: " + request.getEmail());
         }
 
         User user = new User();

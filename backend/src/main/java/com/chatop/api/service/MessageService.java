@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.chatop.api.dto.MessageRequest;
 import com.chatop.api.dto.MessageResponse;
+import com.chatop.api.exception.ResourceNotFoundException;
 import com.chatop.api.model.Message;
 import com.chatop.api.model.Rental;
 import com.chatop.api.model.User;
@@ -11,6 +12,9 @@ import com.chatop.api.repository.MessageRepository;
 import com.chatop.api.repository.RentalRepository;
 import com.chatop.api.repository.UserRepository;
 
+/**
+ * Service for message operations
+ */
 @Service
 public class MessageService {
 
@@ -29,23 +33,19 @@ public class MessageService {
    * Create a new message
    */
   public MessageResponse createMessage(MessageRequest request, String userEmail) {
-    try {
-      User user = userRepository.findByEmail(userEmail)
-          .orElseThrow(() -> new RuntimeException("User not found"));
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + userEmail));
 
-      Rental rental = rentalRepository.findById(request.getRentalId())
-          .orElseThrow(() -> new RuntimeException("Rental not found"));
+    Rental rental = rentalRepository.findById(request.getRentalId())
+        .orElseThrow(() -> new ResourceNotFoundException("Rental not found with id: " + request.getRentalId()));
 
-      Message message = new Message();
-      message.setMessage(request.getMessage());
-      message.setUser(user);
-      message.setRental(rental);
+    Message message = new Message();
+    message.setMessage(request.getMessage());
+    message.setUser(user);
+    message.setRental(rental);
 
-      messageRepository.save(message);
+    messageRepository.save(message);
 
-      return new MessageResponse("Message sent successfully");
-    } catch (Exception ex) {
-      throw new RuntimeException("Failed to create message: " + ex.getMessage(), ex);
-    }
+    return new MessageResponse("Message sent successfully");
   }
 }
