@@ -1,5 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Environment variables
+.env
+backend/.env
+
 # Compiled output
 /dist
 /tmp
@@ -8,8 +12,20 @@
 
 # Node
 /node_modules
+frontend/node_modules/
 npm-debug.log
 yarn-error.log
+
+# Java/Maven
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+*.class
+*.jar
+*.war
+*.ear
+*.log
 
 # IDEs and editors
 .idea/
@@ -30,6 +46,7 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+frontend/.angular/
 .sass-cache/
 /connect.lock
 /coverage
